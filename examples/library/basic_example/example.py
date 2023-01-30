@@ -10,7 +10,13 @@ Usage:
 """
 
 import numpy as np
-from mpi4py import MPI
+try:
+    from mpi4py import MPI
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+except ModuleNotFoundError:
+    rank = 0
+    
 import argparse
 import gc
 
@@ -22,13 +28,12 @@ args = parser.parse_args()
 print("FitSNAP input script:")
 print(args.fitsnap_in)
 
-comm = MPI.COMM_WORLD
 
 # import parallel tools and create pt object
 # this is the backbone of FitSNAP
 from fitsnap3lib.parallel_tools import ParallelTools
 #pt = ParallelTools(comm=comm)
-pt = ParallelTools(comm=comm)
+pt = ParallelTools()
 # Config class reads the input
 from fitsnap3lib.io.input import Config
 config = Config(arguments_lst = [args.fitsnap_in, "--overwrite"])

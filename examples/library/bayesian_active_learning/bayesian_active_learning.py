@@ -21,7 +21,7 @@ convergence_{Energy\Force\Stress}_{mae\rmse}.png
 data_for_convergence_{Energy\Force\Stress}_{mae\rmse}.npy
 fitsnap output for final trained mode
 
-Note: if you make a folder called 'testing_json_group' in your training directory an place some (DFT pre-calculated) json files there, 
+Note: if you make a folder called 'testing_json_group' in your training directory and place some (DFT pre-calculated) json files there, 
 the script will use that as an independent test set for plotting the convergence plots at the end
 
 """
@@ -629,6 +629,11 @@ if rank==0:
     print(current_timestamp - last_timestamp)
     last_timestamp = current_timestamp
 snap.data = snap.scraper.scrape_configs()
+
+## temp just for making a custom plot
+#first_snap_data = copy.deepcopy(snap.data) ## temp just for making a custom plot
+#atomic_volumes = [(abs(np.dot(snap.data[i]['QMLattice'][0],np.cross(snap.data[i]['QMLattice'][1], snap.data[i]['QMLattice'][2]))))/(len(snap.data[i]['Positions'])) for i in range(len(snap.data))] ## temp just for making a custom plot
+#atomic_energies = [(snap.data[i]['Energy'])/(len(snap.data[i]['Positions'])) for i in range(len(snap.data))] ## temp just for making a custom plot
 if parallel:
     comm.Barrier()
 if rank==0:
@@ -1080,6 +1085,36 @@ if AL_settings.plot_convergence_plots:
                     else:
                         np.save(AL_settings.output_directory+'data_for_convergence_'+ind+'_'+metric+'.npy', np.array([x,y_test,y_train]))
 
+## temp just for custom plot
+##if rank==0:
+##    clusters_frame['atomic_energy'] = atomic_energies
+##    clusters_frame['atomic_volume'] = atomic_volumes
+##    fig, ax = plt.subplots()
+##    from cycler import cycler
+##    custom_cycler = (cycler(color=['c', 'm', 'y', 'k', 'g']) * cycler(marker=['o', 'X', '+', '*']))
+##    #ax.set_prop_cycle(custom_cycler)  ## scatter likes to ignore the marker
+##    cycle_dict = {}
+##    for i, d in enumerate(custom_cycler):
+##        cycle_dict[i] = d
+##    for i in range(len(clusters_frame['cluster'].unique())):
+##        x = clusters_frame[clusters_frame['cluster']==i]['atomic_volume']
+##        y =	clusters_frame[clusters_frame['cluster']==i]['atomic_energy']
+##        ax.scatter(x, y, label=i, c=cycle_dict[i]['color'], marker=cycle_dict[i]['marker'], alpha = 0.7, s=50)
+##        ax.set_ylabel('atomic energy [eV/atom]')
+##        ax.set_xlabel("atomic volume [$\AA^3$/atom]")
+##    plt.savefig(AL_settings.output_directory+'clusters_plot.png')
+##    fig, ax = plt.subplots()
+##    for i in range(len(clusters_frame['cluster'].unique())):
+##        x = clusters_frame[clusters_frame['cluster']==i]['atomic_volume']
+##        y =     clusters_frame[clusters_frame['cluster']==i]['atomic_energy']
+##        ax.scatter(x, y, label=i, c=cycle_dict[i]['color'], marker=cycle_dict[i]['marker'], alpha = 0.7, s=50)
+##    ax.set_xlim(17.5, 19.0)
+##    ax.set_ylim(-11.9, -11.5)
+##    plt.savefig(AL_settings.output_directory+'clusters_plot_zoomed_in.png')
+
+    
+
+                        
     #plot_stuff = False
 #if plot_stuff:
 #    if rank==0:

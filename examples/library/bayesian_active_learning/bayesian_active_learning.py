@@ -766,6 +766,12 @@ if rank==0:
     print(current_timestamp - last_timestamp)
     last_timestamp = current_timestamp
 snap.data = snap.scraper.scrape_configs()
+
+## temp just for making a custom plot
+#second_snap_data = copy.deepcopy(snap.data) ## temp just for making a custom plot
+#test_atomic_volumes = [(abs(np.dot(snap.data[i]['QMLattice'][0],np.cross(snap.data[i]['QMLattice'][1], snap.data[i]['QMLattice'][2]))))/(len(snap.data[i]['Positions'])) for i in range(len(snap.data)) if snap.data[i]['Group']=='testing_json_group'] ## temp just for making a custom plot
+#test_atomic_energies = [(snap.data[i]['Energy'])/(len(snap.data[i]['Positions'])) for i in range(len(snap.data)) if snap.data[i]['Group']=='testing_json_group'] ## temp just for making a custom plot
+
 if parallel:
     comm.Barrier()
 if rank==0:
@@ -1098,19 +1104,25 @@ if AL_settings.plot_convergence_plots:
 ##        cycle_dict[i] = d
 ##    for i in range(len(clusters_frame['cluster'].unique())):
 ##        x = clusters_frame[clusters_frame['cluster']==i]['atomic_volume']
-##        y =	clusters_frame[clusters_frame['cluster']==i]['atomic_energy']
+##        y = clusters_frame[clusters_frame['cluster']==i]['atomic_energy']
 ##        ax.scatter(x, y, label=i, c=cycle_dict[i]['color'], marker=cycle_dict[i]['marker'], alpha = 0.7, s=50)
 ##        ax.set_ylabel('atomic energy [eV/atom]')
 ##        ax.set_xlabel("atomic volume [$\AA^3$/atom]")
-##    plt.savefig(AL_settings.output_directory+'clusters_plot.png')
+##    x = test_atomic_volumes
+##    y = test_atomic_energies
+##    ax.scatter(x,y, label='test', c='r', marker='^', alpha=0.8, s=40)
+##    plt.savefig(AL_settings.output_directory+'clusters_plot_w_test.png')
 ##    fig, ax = plt.subplots()
 ##    for i in range(len(clusters_frame['cluster'].unique())):
 ##        x = clusters_frame[clusters_frame['cluster']==i]['atomic_volume']
-##        y =     clusters_frame[clusters_frame['cluster']==i]['atomic_energy']
+##        y = clusters_frame[clusters_frame['cluster']==i]['atomic_energy']
 ##        ax.scatter(x, y, label=i, c=cycle_dict[i]['color'], marker=cycle_dict[i]['marker'], alpha = 0.7, s=50)
+##    x =	test_atomic_volumes
+##    y =	test_atomic_energies
+##    ax.scatter(x,y, label='test', c='r', marker='^', alpha=0.8, s=40)
 ##    ax.set_xlim(17.5, 19.0)
 ##    ax.set_ylim(-11.9, -11.5)
-##    plt.savefig(AL_settings.output_directory+'clusters_plot_zoomed_in.png')
+##    plt.savefig(AL_settings.output_directory+'clusters_plot_zoomed_in_w_test.png')
 
     
 
